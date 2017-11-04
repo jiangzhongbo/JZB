@@ -51,29 +51,33 @@ namespace UPromise
             return p;
         }
 
-        public static Promise All(params Promise[] iterable)
+        public static Promise All(params Promise[] args)
         {
             return new Promise((resolve, reject) =>
             {
-                Action<int, Promise> res = null;
-                res = (int i, Promise val) =>
+                if (args == null || args.Length == 0) resolve(new Promise[0]);
+                var resolvedCounter = 0;
+                var promiseNum = args.Length;
+                var resolvedValues = new object[promiseNum];
+                for (var i = 0; i < promiseNum; i++)
                 {
-                    while (val._state == State._3_adopted)
+                    Action<int> f = (index) =>
                     {
-                        val = val._value as Promise;
-                    }
-                    if (val._state == State._1_fulfilled) res(i, val._value as Promise);
-                    if (val._state == State._2_rejected) reject(val._value);
-                    cb d = v =>
-                    {
-                        res(i, v as Promise);
+                        Promise.Resolve(args[index]).Then(value =>
+                        {
+                            resolvedCounter++;
+                            resolvedValues[index] = value;
+                            if (resolvedCounter == promiseNum) {
+                                resolve(resolvedValues);
+                            }
+                        }
+                        ,
+                        reason =>
+                        {
+                            reject(reason);
+                        });
                     };
-                    val.Then(d, reject);
-                    return;
-                };
-                for (var i = 0; i < iterable.Length; i++)
-                {
-                    res(i, iterable[i]);
+                    f(i);
                 }
             });
         }

@@ -32,4 +32,9 @@ public class Test2ss1 : SkynetService
     {
 
     }
+
+    IEnumerator a()
+    {
+        yield return null;
+    }
 }
