@@ -6,13 +6,6 @@ using System.Linq;
 using UPromise;
 public abstract class SkynetService : MonoBehaviour
 {
-    protected struct _Continue
-    {
-
-    }
-
-    protected static _Continue Continue = new _Continue();
-
     private class cotask
     {
         public const int STATE_SUSPEND = 0;
@@ -79,10 +72,6 @@ public abstract class SkynetService : MonoBehaviour
                         });
                         is_suspend = true;
                         break;
-                    }
-                    else if (c is _Continue)
-                    {
-                        continue;
                     }
                     else if (c is YieldInstruction)
                     {
@@ -274,12 +263,11 @@ public abstract class SkynetService : MonoBehaviour
             IEnumerator ie = GetType()
                 .GetMethod(func_name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
                 .Invoke(this, args) as IEnumerator;
-            localqueue.Enqueue(new cotask() { ie = ie, call_session = session, call_addr = source, call_type = type, call_funcname = func_name });
+            localqueue.Enqueue(new cotask() { ie = ie, call_session = session, call_addr = source, call_type = type, call_funcname = func_name, args = args });
             task_num = localqueue.Count;
         }
     }
-
-    void Update()
+    void handleQueue()
     {
         if (localqueue.Count > 0)
         {
@@ -287,7 +275,8 @@ public abstract class SkynetService : MonoBehaviour
             task_num = localqueue.Count;
             current_task_name = current_cotask.call_funcname;
             bool is_suspend = false;
-            while (current_cotask.ie.MoveNext())
+            bool ok = current_cotask.ie.MoveNext();
+            if (ok)
             {
                 var c = current_cotask.ie.Current;
                 if (c is Promise)
@@ -298,40 +287,35 @@ public abstract class SkynetService : MonoBehaviour
                         localqueue.Enqueue(current_cotask);
                     });
                     is_suspend = true;
-                    break;
-                }
-                else if (c is _Continue)
-                {
-                    
                 }
                 else if (c is YieldInstruction)
                 {
-                    
                 }
                 else if (c is WWW)
                 {
-                    
                 }
                 if (c is IEnumerator)
                 {
-                    
                 }
                 else
                 {
-                    
                 }
             }
-            if (!is_suspend)
+            else
             {
-                if (!ie_ret.Contains(current_cotask))
+                if (!is_suspend)
                 {
-                    rawret(current_cotask.call_addr, current_cotask.call_type, current_cotask.call_session);
+                    if (!ie_ret.Contains(current_cotask))
+                    {
+                        rawret(current_cotask.call_addr, current_cotask.call_type, current_cotask.call_session);
+                    }
+                }
+                if (ie_ret.Contains(current_cotask))
+                {
+                    ie_ret.Remove(current_cotask);
                 }
             }
-            if (ie_ret.Contains(current_cotask))
-            {
-                ie_ret.Remove(current_cotask);
-            }
+
         }
     }
 }
