@@ -2,6 +2,8 @@
 using System.Collections;
 using UPromise;
 using System;
+using System.Reflection;
+
 public class Test2ss1 : SkynetService
 {
     void Awake()
@@ -16,16 +18,13 @@ public class Test2ss1 : SkynetService
 
     IEnumerator fuck()
     {
-        var p = call("Test2ss2", "fuck");
-        yield return p;
-        p.Then(value =>
-        {
-            _.Log(((object[])value)[0]);
-        });
-        yield return new Promise((s, f) =>
-        {
+        aaa();
+        yield return null;
+    }
 
-        });
+    void aaa()
+    {
+        _.Log(MethodBase.GetCurrentMethod().DeclaringType);
     }
 
     void fuck2()

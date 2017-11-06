@@ -23,7 +23,6 @@ namespace UPromise
                     Promise.Resolve(cb()).Then( _ =>
                     {
                         throw reason as Exception;
-                        return null;
                     });
                 });
         }

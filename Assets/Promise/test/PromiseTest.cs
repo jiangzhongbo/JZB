@@ -18,7 +18,6 @@ public class PromiseTest {
         });
 	}
 
-
 	[UnityTest]
     public IEnumerator Test_then_later()
     {
