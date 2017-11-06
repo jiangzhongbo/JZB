@@ -3,122 +3,17 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UPromise;
-public partial class Co : MonoBehaviour
+public sealed partial class Co : MonoBehaviour
 {
-    private interface IGroupPool
+    private PoolType poolType = PoolType.Concurrent;
+    private ICoroutinePool pool = new ConcurrentPool();
+    private Dictionary<IEnumerator, Coroutine> childie_parentco = new Dictionary<IEnumerator, Coroutine>();
+    private List<Action<ICoroutinePool, Coroutine, object>> _filters = new List<Action<ICoroutinePool, Coroutine, object>>();
+
+    void Awake()
     {
-        List<Group> Get();
-        List<Group> GetByType(RunType type);
-        void Remove(Group ie);
-        void Add(Group ie);
+        filters();
     }
-    
-    private class ConcurrentPool : IGroupPool
-    {
-        private List<Group> gs = new List<Group>();
-        private List<Group> _gs = new List<Group>();
-
-
-        public List<Group> Get()
-        {
-            _gs.Clear();
-            _gs.AddRange(gs);
-            return _gs;
-        }
-
-        public void Remove(Group ie)
-        {
-            gs.Remove(ie);
-        }
-
-        public void Add(Group ie)
-        {
-            gs.Add(ie);
-        }
-
-        public List<Group> GetByType(RunType type)
-        {
-            _gs.Clear();
-            for(int i = 0; i < _gs.Count; i++)
-            {
-                if(gs[i].Type == type)
-                {
-                    _gs.Add(gs[i]);
-                }
-            }
-            return _gs;
-        }
-    }
-
-    private class SequencePool : IGroupPool
-    {
-        private Queue<Group> queue = new Queue<Group>();
-        private List<Group> _ret = new List<Group>(1);
-
-        public void Add(Group ie)
-        {
-            queue.Enqueue(ie);
-        }
-
-        public List<Group> Get()
-        {
-            _ret.Clear();
-            _ret.Add(queue.Peek());
-            return _ret;
-        }
-
-        public List<Group> GetByType(RunType type)
-        {
-            _ret.Clear();
-            if(queue.Peek().Type == type)
-            {
-                _ret.Add(queue.Peek());
-            }
-            return _ret;
-        }
-
-        public void Remove(Group ie)
-        {
-            if(queue.Peek() == ie)
-            {
-                queue.Dequeue();
-            }
-        }
-
-    }
-    public enum RunType
-    {
-        Update,
-        LateUpdate,
-        FixedUpdate,
-    }
-
-    public enum PoolType
-    {
-        Sequence,
-        Concurrent
-    }
-
-    public class Group
-    {
-        public IEnumerator IE;
-        public RunType Type;
-
-        public Group(IEnumerator ie, RunType type)
-        {
-            this.IE = ie;
-            this.Type = type;
-        }
-    }
-
-    public readonly static object ToNext = new object();
-
-    public readonly static object ToUpdate = new object();
-    public readonly static object ToFixedUpdate = new object();
-    public readonly static object ToLateUpdate = new object();
-
-    private IGroupPool pool = new ConcurrentPool();
-    private Dictionary<IEnumerator, Group> childie_parentg = new Dictionary<IEnumerator, Group>();
 
     public void With(PoolType t)
     {
@@ -132,19 +27,64 @@ public partial class Co : MonoBehaviour
         }
     }
 
-    public void Resume(IEnumerator ie, RunType type = RunType.Update)
+    private void filter(Action<ICoroutinePool, Coroutine, object> fn)
     {
-        pool.Add(Wrap(ie, type));
+        _filters.Add(fn);
     }
 
-    public void Resume(Group g)
+    private void filters()
     {
-        pool.Add(g);
+        _filters.Clear();
+        filterCore();
+        filterPromise();
+        filterExtensions();
+    }
+    private void filterCore()
+    {
+        filter(
+            (pool, co, c) =>
+            {
+                if (c is IEnumerator)
+                {
+                    pool.Remove(co);
+                    var _co = Create(c as IEnumerator);
+                    pool.Add(_co);
+                    childie_parentco[_co.IE] = co;
+                }
+            }
+        );
+        filter(
+            (pool, co, c) =>
+            {
+                if (c is Coroutine)
+                {
+                    pool.Remove(co);
+                    var _co = c as Coroutine;
+                    pool.Add(_co);
+                    childie_parentco[_co.IE] = co;
+                }
+            }
+        );
     }
 
-    public Group Wrap(IEnumerator ie, RunType type = RunType.Update)
+    public CoroutineState Status(Coroutine c)
     {
-        return new Group(ie, type);
+        return c.State;
+    }
+
+    public Coroutine Create(IEnumerator ie, RunType type = RunType.Update)
+    {
+        return new Coroutine(ie, type); 
+    }
+
+    public void Run(Coroutine c)
+    {
+        pool.Add(c);
+    }
+
+    public void Run(IEnumerator ie, RunType type = RunType.Update)
+    {
+        pool.Add(Create(ie, type));
     }
 
     private void Update()
@@ -162,77 +102,38 @@ public partial class Co : MonoBehaviour
         handle(pool, RunType.LateUpdate);
     }
 
-    void handle(IGroupPool pool, RunType type)
+    private void handle(ICoroutinePool pool, RunType type)
     {
-        var gs = pool.GetByType(type);
-        if (gs.Count > 0)
+        var cos = pool.GetByType(type);
+        if (cos.Count > 0)
         {
-            for(int i = 0; i < gs.Count; i++)
+            for(int i = 0; i < cos.Count; i++)
             {
-                var g = gs[i];
-                handle_g(g, pool);
+                var c = cos[i];
+                handle_coroutine(c, pool);
             }
         }
     }
 
-    void handle_g(Group g, IGroupPool pool)
+    private void handle_coroutine(Coroutine c, ICoroutinePool pool)
     {
-        bool ok = g.IE.MoveNext();
+        bool ok = c.IE.MoveNext();
         if (ok)
         {
-            var c = g.IE.Current;
-            if (c is Promise)
+            var current = c.IE.Current;
+            for (int i = 0; i < _filters.Count; i++)
             {
-                Action<Group> f = (arg) =>
-                {
-                    var p = (Promise)c;
-                    p.Then(value =>
-                    {
-                        pool.Add(arg);
-                    });
-                };
-                f(g);
-                pool.Add(g);
-            }
-            else if (c is IEnumerator)
-            {
-                pool.Remove(g);
-                var _g = Wrap(c as IEnumerator);
-                pool.Add(_g);
-                childie_parentg[_g.IE] = g;
-            }
-            else if (c is Group)
-            {
-                pool.Remove(g);
-                var _g = c as Group;
-                pool.Add(_g);
-                childie_parentg[_g.IE] = g;
-            }
-            else if(c is object && c == ToNext)
-            {
-                handle_g(g, pool);
-            }
-            else if(c is object && c == ToUpdate)
-            {
-                g.Type = RunType.Update;
-            }
-            else if (c is object && c == ToFixedUpdate)
-            {
-                g.Type = RunType.FixedUpdate;
-            }
-            else if (c is object && c == ToLateUpdate)
-            {
-                g.Type = RunType.LateUpdate;
+                _filters[i](pool, c, current);
             }
         }
         else
         {
-            if (childie_parentg.ContainsKey(g.IE))
+            if (childie_parentco.ContainsKey(c.IE))
             {
-                pool.Add(childie_parentg[g.IE]);
-                childie_parentg.Remove(g.IE);
+                pool.Add(childie_parentco[c.IE]);
+                childie_parentco.Remove(c.IE);
             }
-            pool.Remove(g);
+            pool.Remove(c);
         }
     }
 }

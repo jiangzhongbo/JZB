@@ -9,14 +9,14 @@ public class testco {
 	[Test]
 	public void test_co_base() {
         var co = new GameObject().AddComponent<Co>();
-        co.Resume(test1());
+        co.Run(test1());
 	}
 
     [UnityTest]
     public IEnumerator test_co_promise()
     {
         var co = new GameObject().AddComponent<Co>();
-        co.Resume(testPromise(co));
+        co.Run(testPromise(co));
         yield return new WaitForSeconds(7);
     }
 
@@ -24,7 +24,7 @@ public class testco {
     public IEnumerator test_co_next()
     {
         var co = new GameObject().AddComponent<Co>();
-        co.Resume(testnextframe());
+        co.Run(testnextframe());
         yield return null;
         yield return Co.ToNext;
     }

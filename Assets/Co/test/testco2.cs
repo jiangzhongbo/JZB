@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class testco2 : Co
+public class testco2 : MonoBehaviour
 {
     void Start()
     {
-        Resume(test1());
+        var co = gameObject.AddComponent<Co>();
+        co.Run(test1());
     }
 
 
@@ -25,9 +26,9 @@ public class testco2 : Co
 
     IEnumerator test3()
     {
-        yield return ToNext;
-        yield return ToUpdate;
-        yield return ToFixedUpdate;
-        yield return ToLateUpdate;
+        yield return Co.ToNext;
+        yield return Co.ToUpdate;
+        yield return Co.ToFixedUpdate;
+        yield return Co.ToLateUpdate;
     }
 }
