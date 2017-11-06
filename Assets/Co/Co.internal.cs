@@ -1,35 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using System;
 public partial class Co
 {
     private interface ICoroutinePool
     {
-        List<Coroutine> Get();
-        List<Coroutine> GetByType(RunType type);
-        void Remove(Coroutine ie);
-        void Add(Coroutine ie);
+        List<_Coroutine> Get();
+        List<_Coroutine> GetByType(RunType type);
+        void Remove(_Coroutine ie);
+        void Add(_Coroutine ie);
     }
 
     private class SequencePool : ICoroutinePool
     {
-        private Queue<Coroutine> queue = new Queue<Coroutine>();
-        private List<Coroutine> _ret = new List<Coroutine>(1);
+        private Queue<_Coroutine> queue = new Queue<_Coroutine>();
+        private List<_Coroutine> _ret = new List<_Coroutine>(1);
 
-        public void Add(Coroutine ie)
+        public void Add(_Coroutine ie)
         {
             queue.Enqueue(ie);
         }
 
-        public List<Coroutine> Get()
+        public List<_Coroutine> Get()
         {
             _ret.Clear();
             _ret.Add(queue.Peek());
             return _ret;
         }
 
-        public List<Coroutine> GetByType(RunType type)
+        public List<_Coroutine> GetByType(RunType type)
         {
             _ret.Clear();
             if (queue.Peek().Type == type)
@@ -39,7 +39,7 @@ public partial class Co
             return _ret;
         }
 
-        public void Remove(Coroutine ie)
+        public void Remove(_Coroutine ie)
         {
             if (queue.Peek() == ie)
             {
@@ -50,28 +50,28 @@ public partial class Co
 
     private class ConcurrentPool : ICoroutinePool
     {
-        private List<Coroutine> cs = new List<Coroutine>();
-        private List<Coroutine> _cs = new List<Coroutine>();
+        private List<_Coroutine> cs = new List<_Coroutine>();
+        private List<_Coroutine> _cs = new List<_Coroutine>();
 
 
-        public List<Coroutine> Get()
+        public List<_Coroutine> Get()
         {
             _cs.Clear();
             _cs.AddRange(cs);
             return _cs;
         }
 
-        public void Remove(Coroutine ie)
+        public void Remove(_Coroutine ie)
         {
             cs.Remove(ie);
         }
 
-        public void Add(Coroutine ie)
+        public void Add(_Coroutine ie)
         {
             cs.Add(ie);
         }
 
-        public List<Coroutine> GetByType(RunType type)
+        public List<_Coroutine> GetByType(RunType type)
         {
             _cs.Clear();
             for (int i = 0; i < _cs.Count; i++)
@@ -99,22 +99,25 @@ public partial class Co
 
     public enum CoroutineState
     {
-        suspend,
-        running,
-        dead,
-        normal
+        Suspend,
+        Running,
+        Dead,
+        Normal
     }
 
-    public class Coroutine
+    private class _Coroutine
     {
         public IEnumerator IE;
         public RunType Type;
-        public CoroutineState State = CoroutineState.normal;
-        public Coroutine(IEnumerator ie, RunType type)
+        public CoroutineState State = CoroutineState.Suspend;
+        public _Coroutine(IEnumerator ie, RunType type)
         {
             this.IE = ie;
             this.Type = type;
         }
     }
 
+    public class Coroutine
+    {
+    }
 }

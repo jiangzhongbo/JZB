@@ -11,13 +11,19 @@ public partial class Co
             {
                 if (c is Promise)
                 {
-                    Action<Coroutine> f = (arg) =>
+                    Action<_Coroutine> f = (arg) =>
                     {
                         var p = (Promise)c;
-                        p.Then(value =>
-                        {
-                            pool.Add(arg);
-                        });
+                        p.Then(
+                            value =>
+                            {
+                                pool.Add(arg);
+                            },
+                            reason =>
+                            {
+                                throw reason as Exception;
+                            }
+                        );
                     };
                     f(co);
                 }

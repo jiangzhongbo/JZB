@@ -15,10 +15,11 @@ public partial class Co
             {
                 if (c is object && c == ToNext)
                 {
-                    handle_coroutine(co, pool);
+                    handle_coroutine(co);
                 }
             }
         );
+
         filter(
             (pool, co, c) =>
             {
