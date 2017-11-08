@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UPromise;
 public sealed partial class Co : MonoBehaviour
 {
+    private static Action noop = () => { };
     private PoolType poolType = PoolType.Concurrent;
     private ICoroutinePool pool = new ConcurrentPool();
     private Dictionary<_Coroutine, _Coroutine> child_parent = new Dictionary<_Coroutine, _Coroutine>();
@@ -78,7 +79,9 @@ public sealed partial class Co : MonoBehaviour
 
     private _Coroutine create(IEnumerator ie, RunType type = RunType.Update)
     {
-        return new _Coroutine(ie, type); 
+        var _co = new _Coroutine(ie, type);
+        _co_dead[_co] = noop;
+        return _co; 
     }
 
     private void Update()
@@ -137,6 +140,7 @@ public sealed partial class Co : MonoBehaviour
             if (inter_outer.ContainsKey(c))
             {
                 var out_c = inter_outer[c];
+                out_c.CallThen();
                 inter_outer.Remove(c);
                 outer_inter.Remove(out_c);
             }

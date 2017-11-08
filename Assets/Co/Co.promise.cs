@@ -30,4 +30,41 @@ public partial class Co
             }
         );
     }
+    public partial class Coroutine
+    {
+        public Promise Then(Action<Coroutine> cb)
+        {
+            return new Promise((a, b) =>
+            {
+                SetThen(() =>
+                {
+                    cb(this);
+                    a(this);
+                });
+            });
+        }
+
+        public Promise Then(Func<Coroutine,object> cb)
+        {
+            return new Promise((a, b) =>
+            {
+                SetThen(() =>
+                {
+                    a(cb(this));
+                });
+            });
+        }
+
+        public Promise Then()
+        {
+            return new Promise((a, b) =>
+            {
+                SetThen(() =>
+                {
+                    a(this);
+                });
+            });
+        }
+    }
+
 }

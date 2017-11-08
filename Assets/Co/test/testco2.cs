@@ -6,7 +6,8 @@ public class testco2 : MonoBehaviour
     void Start()
     {
         var co = gameObject.AddComponent<Co>();
-        co.Run(test1());
+        co.Run(test1())
+            .Then(c => { });
     }
 
 

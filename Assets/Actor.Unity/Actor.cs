@@ -4,7 +4,23 @@ using System;
 using UPromise;
 namespace UActor
 {
-    public abstract class Actor : MonoBehaviour
+    public interface IDispatch
+    {
+
+    }
+
+
+    public class Sequence : IDispatch
+    {
+
+    }
+
+    public class Concurrent : IDispatch
+    {
+
+    }
+
+    public abstract class Actor<T> : MonoBehaviour where T : IDispatch
     {
         public int self_handle;
         private Co co;
@@ -12,6 +28,18 @@ namespace UActor
         void Awake()
         {
             co = gameObject.AddComponent<Co>();
+            if(typeof(T) == typeof(Sequence))
+            {
+                co.With(Co.PoolType.Sequence);
+            }
+            else if (typeof(T) == typeof(Concurrent))
+            {
+                co.With(Co.PoolType.Concurrent);
+            }
+            else
+            {
+
+            }
             co.Run(Init());
         }
 
@@ -25,9 +53,9 @@ namespace UActor
             return 0;
         }
 
-        public int Tell<T>(Func<T, IEnumerator> fn) where T : Actor
+        public int Tell<K>(Func<K, IEnumerator> fn) where K : Actor<IDispatch>
         {
-            return Skynet.Send<T>(0, 0, 0, 0, fn);
+            return Skynet.Send<K>(0, 0, 0, 0, fn);
         }
 
         public int Tell(Func<IEnumerator> fn)
@@ -35,7 +63,7 @@ namespace UActor
             return 0;
         }
 
-        public Promise Ask<T>(Func<T, IEnumerator> fn) where T : Actor
+        public Promise Ask<K>(Func<K, IEnumerator> fn) where K : Actor<IDispatch>
         {
             return Promise.Resolve(0);
         }

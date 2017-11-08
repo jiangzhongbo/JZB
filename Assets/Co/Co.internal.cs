@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System;
 public partial class Co
@@ -117,7 +116,21 @@ public partial class Co
         }
     }
 
-    public class Coroutine
+    public partial class Coroutine
     {
+        private Action then;
+
+        public void SetThen(Action cb)
+        {
+            then = cb;
+        }
+
+        public void CallThen()
+        {
+            if(then != null)
+            {
+                then();
+            }
+        }
     }
 }
