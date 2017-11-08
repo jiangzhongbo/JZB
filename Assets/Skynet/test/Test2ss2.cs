@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Skynet1;
 
 public class Test2ss2 : SkynetService
 {

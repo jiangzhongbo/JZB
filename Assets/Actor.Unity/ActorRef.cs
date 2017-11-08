@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
-
-public class ActorRef
+namespace UActor
 {
+    public class ActorRef
+    {
 
+    }
 }
