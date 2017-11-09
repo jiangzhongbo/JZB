@@ -80,7 +80,6 @@ public sealed partial class Co : MonoBehaviour
     private _Coroutine create(IEnumerator ie, RunType type = RunType.Update)
     {
         var _co = new _Coroutine(ie, type);
-        _co_dead[_co] = noop;
         return _co; 
     }
 
