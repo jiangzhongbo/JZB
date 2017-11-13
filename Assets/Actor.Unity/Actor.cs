@@ -4,35 +4,35 @@ using System;
 using UPromise;
 namespace UActor
 {
-    public interface IDispatch
+    public interface IMailBox
     {
 
     }
 
 
-    public class Sequence : IDispatch
+    public class SequenceMailBox : IMailBox
     {
 
     }
 
-    public class Concurrent : IDispatch
+    public class ConcurrentMailBox : IMailBox
     {
 
     }
 
-    public abstract class Actor<T> : MonoBehaviour where T : IDispatch
+    public abstract class Actor<T> where T : IMailBox
     {
         public int self_handle;
         private Co co;
         public abstract IEnumerator Init();
         void Awake()
         {
-            co = gameObject.AddComponent<Co>();
-            if(typeof(T) == typeof(Sequence))
+            //co = gameObject.AddComponent<Co>();
+            if(typeof(T) == typeof(SequenceMailBox))
             {
                 co.With(Co.PoolType.Sequence);
             }
-            else if (typeof(T) == typeof(Concurrent))
+            else if (typeof(T) == typeof(ConcurrentMailBox))
             {
                 co.With(Co.PoolType.Concurrent);
             }
@@ -53,7 +53,7 @@ namespace UActor
             return 0;
         }
 
-        public int Tell<K>(Func<K, IEnumerator> fn) where K : Actor<IDispatch>
+        public int Tell<K>(Func<K, IEnumerator> fn) where K : Actor<IMailBox>
         {
             return Skynet.Send<K>(0, 0, 0, 0, fn);
         }
@@ -63,7 +63,12 @@ namespace UActor
             return 0;
         }
 
-        public Promise Ask<K>(Func<K, IEnumerator> fn) where K : Actor<IDispatch>
+        public Promise Ask<K>(Func<K, IEnumerator> fn) where K : Actor<IMailBox>
+        {
+            return Promise.Resolve(0);
+        }
+
+        public Promise Ask(Func<object, IEnumerator> fn)
         {
             return Promise.Resolve(0);
         }

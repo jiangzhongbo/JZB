@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using System.Threading.Tasks;
 public class testco2 : MonoBehaviour
 {
     void Start()
@@ -32,5 +32,13 @@ public class testco2 : MonoBehaviour
         yield return Co.ToUpdate;
         yield return Co.ToFixedUpdate;
         yield return Co.ToLateUpdate;
+    }
+
+    async void test_async()
+    {
+        await TaskEx.Run(async () =>
+        {
+            await 0;
+        });
     }
 }

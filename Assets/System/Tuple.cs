@@ -7,7 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace System
+namespace System2
 {
     public interface IStructuralEquatable
     {

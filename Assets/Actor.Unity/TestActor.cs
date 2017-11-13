@@ -2,16 +2,15 @@
 using System.Collections;
 using UActor;
 using System;
-public class TestActor : Actor<Sequence>
+public class TestActor : Actor<SequenceMailBox>
 {
     public override IEnumerator Init()
     {
-        yield return 
-            Ask(() => { return A(0); })
-            .Then(value =>
-            {
-                return Ask(() => { return A((int)value); });
-            });
+        var answer = Ask(() => { return A(0); });
+        yield return answer;
+        var answer2 = Ask(() => { return A((int)answer.GetValue()); });
+        yield return answer2;
+
     }
 
     public IEnumerator A(int value)

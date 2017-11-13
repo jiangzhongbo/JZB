@@ -37,7 +37,7 @@ namespace UActor
             int session,
             int type,
             Func<T, IEnumerator> fn
-            ) where T : Actor<IDispatch>
+            ) where T : Actor<IMailBox>
         {
             return 0;
         }

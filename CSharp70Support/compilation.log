@@ -1,0 +1,90 @@
+********************************************************************************
+*                     Monday, November 13, 2017 7:23:27 PM                     *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 2.0.3.30
+Platform: Windows
+Target assembly: Assembly-CSharp.dll
+Project directory: D:\Workspace\Unity\JZB
+Target profile directory: D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity
+Unity 'Data' or 'Frameworks' directory: D:/app/unity5.6.4/Editor/Data
+Compiler: Microsoft C# 7.0
+
+- Compilation -----------------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Xml.dll" @Temp/UnityTempFile-a9eb73cbe4e05564b9ad8ed7d1a8557a 
+Exit code: 1
+Elapsed time: 1.33 sec
+
+- Compiler output (0 lines):
+
+- Compiler errors (2 lines):
+0: Assets\Skynet\Skynet.cs(33,29): error CS0104: 'Tuple<,>' is an ambiguous reference between 'System.Tuple<T1, T2>' and 'System2.Tuple<T1, T2>'
+1: Assets\Skynet\Skynet.cs(34,29): error CS0104: 'Tuple<,>' is an ambiguous reference between 'System.Tuple<T1, T2>' and 'System2.Tuple<T1, T2>'
+********************************************************************************
+*                     Monday, November 13, 2017 7:23:49 PM                     *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 2.0.3.30
+Platform: Windows
+Target assembly: Assembly-CSharp.dll
+Project directory: D:\Workspace\Unity\JZB
+Target profile directory: D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity
+Unity 'Data' or 'Frameworks' directory: D:/app/unity5.6.4/Editor/Data
+Compiler: Microsoft C# 7.0
+
+- Compilation -----------------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Xml.dll" @Temp/UnityTempFile-20a77961906c5114597eb0a1a22496c7 
+Exit code: 0
+Elapsed time: 1.18 sec
+
+- Compiler output (0 lines):
+
+- Compiler errors (7 lines):
+0: Assets\Actor.Unity\Skynet.cs(14,24): warning CS0649: Field 'Skynet.skynet_message.type' is never assigned to, and will always have its default value 0
+1: Assets\Actor.Unity\Skynet.cs(11,24): warning CS0649: Field 'Skynet.skynet_message.source' is never assigned to, and will always have its default value 0
+2: Assets\Actor.Unity\Skynet.cs(16,29): warning CS0649: Field 'Skynet.skynet_message.args' is never assigned to, and will always have its default value null
+3: Assets\Actor.Unity\Skynet.cs(15,27): warning CS0649: Field 'Skynet.skynet_message.func_name' is never assigned to, and will always have its default value null
+4: Assets\Actor.Unity\Skynet.cs(12,24): warning CS0649: Field 'Skynet.skynet_message.dest' is never assigned to, and will always have its default value 0
+5: Assets\Actor.Unity\Skynet.cs(17,29): warning CS0649: Field 'Skynet.skynet_message.fn' is never assigned to, and will always have its default value null
+6: Assets\Actor.Unity\Skynet.cs(13,24): warning CS0649: Field 'Skynet.skynet_message.session' is never assigned to, and will always have its default value 0
+
+- PDB to MDB conversion --------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp.dll
+Exit code: 0
+Elapsed time: 0.24 sec
+
+- pdb2mdb.exe output (0 lines):
+********************************************************************************
+*                     Monday, November 13, 2017 7:23:51 PM                     *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 2.0.3.30
+Platform: Windows
+Target assembly: Assembly-CSharp-Editor.dll
+Project directory: D:\Workspace\Unity\JZB
+Target profile directory: D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api
+Unity 'Data' or 'Frameworks' directory: D:/app/unity5.6.4/Editor/Data
+Compiler: Microsoft C# 7.0
+
+- Compilation -----------------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Xml.dll" @Temp/UnityTempFile-de9b2131a04e919408255b8f5d4b95af 
+Exit code: 0
+Elapsed time: 1.05 sec
+
+- Compiler output (0 lines):
+
+- Compiler errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp-Editor.dll
+Exit code: 0
+Elapsed time: 0.08 sec
+
+- pdb2mdb.exe output (0 lines):
