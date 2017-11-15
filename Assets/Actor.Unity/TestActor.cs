@@ -6,9 +6,9 @@ public class TestActor : Actor<SequenceMailBox>
 {
     public override IEnumerator Init()
     {
-        var answer = Ask(() => { return A(0); });
+        var answer = Ask(() => A(0));
         yield return answer;
-        var answer2 = Ask(() => { return A((int)answer.GetValue()); });
+        var answer2 = Ask(() => A((int)answer.GetValue()));
         yield return answer2;
 
     }
