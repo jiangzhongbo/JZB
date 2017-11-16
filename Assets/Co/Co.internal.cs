@@ -127,10 +127,7 @@ public partial class Co
 
         public void CallThen()
         {
-            if(then != null)
-            {
-                then();
-            }
+            then?.Invoke();
         }
     }
 }

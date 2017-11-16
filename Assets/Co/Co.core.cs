@@ -13,6 +13,7 @@ public sealed partial class Co : MonoBehaviour
     private Dictionary<Coroutine, _Coroutine> outer_inter = new Dictionary<Coroutine, _Coroutine>();
     private Dictionary<_Coroutine, Coroutine> inter_outer = new Dictionary<_Coroutine, Coroutine>();
     private _Coroutine co_current = null;
+
     void Awake()
     {
         filters();

@@ -1,5 +1,5 @@
 ********************************************************************************
-*                    Tuesday, November 14, 2017 7:28:48 PM                     *
+*                    Thursday, November 16, 2017 8:24:31 PM                    *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 2.0.3.30
 Platform: Windows
@@ -12,32 +12,24 @@ Compiler: Microsoft C# 7.0
 - Compilation -----------------------------------------------
 
 Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Xml.dll" @Temp/UnityTempFile-3b68d0abdad433044934817b26cde411 
+Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Xml.dll" @Temp/UnityTempFile-5624e56cf1d199c49b2dbacc35973673 
 Exit code: 0
-Elapsed time: 2.68 sec
+Elapsed time: 1.13 sec
 
 - Compiler output (0 lines):
 
-- Compiler errors (8 lines):
-0: Assets\Actor.Unity\Skynet.cs(16,29): warning CS0649: Field 'Skynet.skynet_message.args' is never assigned to, and will always have its default value null
-1: Assets\Actor.Unity\Skynet.cs(17,29): warning CS0649: Field 'Skynet.skynet_message.fn' is never assigned to, and will always have its default value null
-2: Assets\Actor.Unity\Skynet.cs(12,24): warning CS0649: Field 'Skynet.skynet_message.dest' is never assigned to, and will always have its default value 0
-3: Assets\Actor.Unity\Skynet.cs(11,24): warning CS0649: Field 'Skynet.skynet_message.source' is never assigned to, and will always have its default value 0
-4: Assets\Actor.Unity\Skynet.cs(15,27): warning CS0649: Field 'Skynet.skynet_message.func_name' is never assigned to, and will always have its default value null
-5: Assets\Actor.Unity\Skynet.cs(14,24): warning CS0649: Field 'Skynet.skynet_message.type' is never assigned to, and will always have its default value 0
-6: Assets\Actor.Unity\Skynet.cs(13,24): warning CS0649: Field 'Skynet.skynet_message.session' is never assigned to, and will always have its default value 0
-7: Assets\Actor.Unity\Actor.cs(26,20): warning CS0649: Field 'Actor<T>.co' is never assigned to, and will always have its default value null
+- Compiler errors (0 lines):
 
 - PDB to MDB conversion --------------------------------------
 
 Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\pdb2mdb.exe
 Arguments: Temp\Assembly-CSharp.dll
 Exit code: 0
-Elapsed time: 0.23 sec
+Elapsed time: 0.10 sec
 
 - pdb2mdb.exe output (0 lines):
 ********************************************************************************
-*                    Tuesday, November 14, 2017 7:28:52 PM                     *
+*                    Thursday, November 16, 2017 8:24:33 PM                    *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 2.0.3.30
 Platform: Windows
@@ -50,9 +42,9 @@ Compiler: Microsoft C# 7.0
 - Compilation -----------------------------------------------
 
 Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Xml.dll" @Temp/UnityTempFile-bd78985b41d45a245b2202f4087975ea 
+Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Xml.dll" @Temp/UnityTempFile-df4ab99d6df346940b04016657fede1e 
 Exit code: 0
-Elapsed time: 0.83 sec
+Elapsed time: 0.67 sec
 
 - Compiler output (0 lines):
 
@@ -63,6 +55,6 @@ Elapsed time: 0.83 sec
 Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\pdb2mdb.exe
 Arguments: Temp\Assembly-CSharp-Editor.dll
 Exit code: 0
-Elapsed time: 0.05 sec
+Elapsed time: 0.06 sec
 
 - pdb2mdb.exe output (0 lines):

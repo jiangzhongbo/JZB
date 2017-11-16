@@ -2,27 +2,7 @@
 using System.Collections;
 using UActor;
 using System;
-public class TestActor : Actor<SequenceMailBox>
+public class TestActor
 {
-    public override IEnumerator Init()
-    {
-        var answer = Ask(() => A(0));
-        yield return answer;
-        var answer2 = Ask(() => A((int)answer.GetValue()));
-        yield return answer2;
 
-    }
-
-    public IEnumerator A(int value)
-    {
-        yield return new WaitForSeconds(10);
-        Reply(value + 1);
-        yield return null;
-    }
-
-    public IEnumerator B(int value)
-    {
-        Reply(value + 1);
-        yield return null;
-    }
 }

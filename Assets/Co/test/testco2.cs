@@ -34,11 +34,4 @@ public class testco2 : MonoBehaviour
         yield return Co.ToLateUpdate;
     }
 
-    async void test_async()
-    {
-        await TaskEx.Run(async () =>
-        {
-            await 0;
-        });
-    }
 }
