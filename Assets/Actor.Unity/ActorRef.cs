@@ -14,12 +14,26 @@ namespace UActor
 
         public void Tell(object value)
         {
-
+            Skynet.Send(
+                Handle, 
+                null,
+                value
+            );
         }
 
         public Promise Ask(object value)
         {
-            return null;
+            return new Promise((ok, errer) =>
+            {
+                Skynet.Send(
+                    Handle,
+                    values =>
+                    {
+                        ok(values);
+                    },
+                    value
+                );
+            });
         }
     }
 }
