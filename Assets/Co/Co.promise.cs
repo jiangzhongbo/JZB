@@ -12,6 +12,7 @@ public partial class Co
             {
                 if (c is Promise)
                 {
+                    pool.Remove(co);
                     Action<_Coroutine> f = (arg) =>
                     {
                         var p = (Promise)c;

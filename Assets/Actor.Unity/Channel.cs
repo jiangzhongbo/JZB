@@ -10,7 +10,7 @@ public sealed class Channel
         Handle = handle;
     }
 
-    public void Dispatch(Action<object[]> cb, object[] args)
+    public void Dispatch()
     {
 
     }

@@ -31,6 +31,11 @@ namespace UActor
             fn(chan);
             return actorRef;
         }
+        private static Co co;
+        private void Start()
+        {
+            co = gameObject.AddComponent<Co>();
+        }
 
         void Update()
         {
