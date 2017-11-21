@@ -28,7 +28,7 @@ namespace UActor
             var chan = new Channel(handle_index);
             handle_chan[handle_index] = chan;
             Q[handle_index] = new Queue<skynet_message>();
-            fn(chan);
+            co.Run(fn(chan));
             return actorRef;
         }
         private static Co co;

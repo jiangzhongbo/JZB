@@ -29,6 +29,25 @@ public partial class Co
                     };
                     f(co);
                 }
+                if(c is IDeferred)
+                {
+                    pool.Remove(co);
+                    Action<_Coroutine> f = (arg) =>
+                    {
+                        var p = (IDeferred)c;
+                        p.Promise().Then(
+                            value =>
+                            {
+                                pool.Add(arg);
+                            },
+                            reason =>
+                            {
+                                throw reason as Exception;
+                            }
+                        );
+                    };
+                    f(co);
+                }
             }
         );
     }
