@@ -5,30 +5,30 @@ public partial class Co
 {
     private interface ICoroutinePool
     {
-        List<_Coroutine> Get();
-        List<_Coroutine> GetByType(RunType type);
-        void Remove(_Coroutine ie);
-        void Add(_Coroutine ie);
+        List<Coroutine> Get();
+        List<Coroutine> GetByType(RunType type);
+        void Remove(Coroutine ie);
+        void Add(Coroutine ie);
     }
 
     private class SequencePool : ICoroutinePool
     {
-        private Queue<_Coroutine> queue = new Queue<_Coroutine>();
-        private List<_Coroutine> _ret = new List<_Coroutine>(1);
+        private Queue<Coroutine> queue = new Queue<Coroutine>();
+        private List<Coroutine> _ret = new List<Coroutine>(1);
 
-        public void Add(_Coroutine ie)
+        public void Add(Coroutine ie)
         {
             queue.Enqueue(ie);
         }
 
-        public List<_Coroutine> Get()
+        public List<Coroutine> Get()
         {
             _ret.Clear();
             _ret.Add(queue.Peek());
             return _ret;
         }
 
-        public List<_Coroutine> GetByType(RunType type)
+        public List<Coroutine> GetByType(RunType type)
         {
             _ret.Clear();
             if (queue.Peek().Type == type)
@@ -38,7 +38,7 @@ public partial class Co
             return _ret;
         }
 
-        public void Remove(_Coroutine ie)
+        public void Remove(Coroutine ie)
         {
             if (queue.Peek() == ie)
             {
@@ -49,28 +49,28 @@ public partial class Co
 
     private class ConcurrentPool : ICoroutinePool
     {
-        private List<_Coroutine> cs = new List<_Coroutine>();
-        private List<_Coroutine> _cs = new List<_Coroutine>();
+        private List<Coroutine> cs = new List<Coroutine>();
+        private List<Coroutine> _cs = new List<Coroutine>();
 
 
-        public List<_Coroutine> Get()
+        public List<Coroutine> Get()
         {
             _cs.Clear();
             _cs.AddRange(cs);
             return _cs;
         }
 
-        public void Remove(_Coroutine ie)
+        public void Remove(Coroutine ie)
         {
             cs.Remove(ie);
         }
 
-        public void Add(_Coroutine ie)
+        public void Add(Coroutine ie)
         {
             cs.Add(ie);
         }
 
-        public List<_Coroutine> GetByType(RunType type)
+        public List<Coroutine> GetByType(RunType type)
         {
             _cs.Clear();
             for (int i = 0; i < _cs.Count; i++)
@@ -104,30 +104,70 @@ public partial class Co
         Normal
     }
 
-    private class _Coroutine
+    public sealed partial class Coroutine
     {
-        public IEnumerator IE;
-        public RunType Type;
-        public CoroutineState State = CoroutineState.Suspend;
-        public _Coroutine(IEnumerator ie, RunType type)
+        private IEnumerator ie;
+        private RunType type;
+        private CoroutineState state;
+        private List<Action<object>> onFinishs = new List<Action<object>>(1);
+        public RunType Type
         {
-            this.IE = ie;
-            this.Type = type;
+            get
+            {
+                return type;
+            }
         }
+
+        public CoroutineState State
+        {
+            get
+            {
+                return state;
+            }
+        }
+
+        public Coroutine(IEnumerator ie, RunType type,
+            out Action<RunType> setRunType,
+            out Action<CoroutineState> setCoroutineState,
+            out Func<List<Action<object>>> getOnFinishs
+            )
+        {
+            this.ie = ie;
+            this.type = type;
+            setRunType = this.setRunType;
+            setCoroutineState = this.setCoroutineState;
+            getOnFinishs = this.getOnFinishs;
+        }
+
+        public Coroutine Then(Action<object> onFinish)
+        {
+            this.onFinishs.Add(onFinish);
+            return this;
+        }
+
+        private List<Action<object>> getOnFinishs()
+        {
+            return onFinishs;
+        }
+
+        private void setRunType(RunType t)
+        {
+            type = t;
+        }
+
+        private void setCoroutineState(CoroutineState s)
+        {
+            state = s;
+        }
+
     }
 
-    public partial class Coroutine
+    private class CoroutineInterHandler
     {
-        private Action then;
-
-        public void SetThen(Action cb)
-        {
-            then = cb;
-        }
-
-        public void CallThen()
-        {
-            then?.Invoke();
-        }
+        public IEnumerator IE;
+        public Action<RunType> SetRunType;
+        public Action<CoroutineState> SetCoroutineState;
+        public Func<List<Action<object>>> GetOnFinishs;
+        public object Current;
     }
 }

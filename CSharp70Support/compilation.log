@@ -1,5 +1,5 @@
 ********************************************************************************
-*                     Monday, November 20, 2017 7:54:20 PM                     *
+*                   Wednesday, November 22, 2017 10:00:45 PM                   *
 ********************************************************************************
 CSharpCompilerWrapper.exe version: 2.0.3.30
 Platform: Windows
@@ -12,14 +12,49 @@ Compiler: Microsoft C# 7.0
 - Compilation -----------------------------------------------
 
 Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\csc.exe
-Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Xml.dll" @Temp/UnityTempFile-1b26e22322915ef409c7b5343d41e417 
-Exit code: 1
-Elapsed time: 0.55 sec
+Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\Mono\lib\mono\unity\System.Xml.dll" @Temp/UnityTempFile-5c61b5aec24560747abb13e56712569a 
+Exit code: 0
+Elapsed time: 1.13 sec
 
 - Compiler output (0 lines):
 
-- Compiler errors (4 lines):
-0: Assets\Co\Co.internal.cs(8,26): error CS0050: Inconsistent accessibility: return type 'List<Co._Coroutine>' is less accessible than method 'Co.ICoroutinePool.Get()'
-1: Assets\Co\Co.internal.cs(9,26): error CS0050: Inconsistent accessibility: return type 'List<Co._Coroutine>' is less accessible than method 'Co.ICoroutinePool.GetByType(Co.RunType)'
-2: Assets\Co\Co.internal.cs(10,14): error CS0051: Inconsistent accessibility: parameter type 'Co._Coroutine' is less accessible than method 'Co.ICoroutinePool.Remove(Co._Coroutine)'
-3: Assets\Co\Co.internal.cs(11,14): error CS0051: Inconsistent accessibility: parameter type 'Co._Coroutine' is less accessible than method 'Co.ICoroutinePool.Add(Co._Coroutine)'
+- Compiler errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp.dll
+Exit code: 0
+Elapsed time: 0.11 sec
+
+- pdb2mdb.exe output (0 lines):
+********************************************************************************
+*                   Wednesday, November 22, 2017 10:00:47 PM                   *
+********************************************************************************
+CSharpCompilerWrapper.exe version: 2.0.3.30
+Platform: Windows
+Target assembly: Assembly-CSharp-Editor.dll
+Project directory: D:\Workspace\Unity\JZB
+Target profile directory: D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api
+Unity 'Data' or 'Frameworks' directory: D:/app/unity5.6.4/Editor/Data
+Compiler: Microsoft C# 7.0
+
+- Compilation -----------------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\csc.exe
+Arguments: -nostdlib+ -noconfig -nologo -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\mscorlib.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Core.dll" -r:"D:\app\unity5.6.4\Editor\Data\MonoBleedingEdge\lib\mono\2.0-api\System.Xml.dll" @Temp/UnityTempFile-fb93c371a5e75e7478debade34a5577e 
+Exit code: 0
+Elapsed time: 0.66 sec
+
+- Compiler output (0 lines):
+
+- Compiler errors (0 lines):
+
+- PDB to MDB conversion --------------------------------------
+
+Process: D:\Workspace\Unity\JZB\CSharp70Support\Roslyn\pdb2mdb.exe
+Arguments: Temp\Assembly-CSharp-Editor.dll
+Exit code: 0
+Elapsed time: 0.06 sec
+
+- pdb2mdb.exe output (0 lines):

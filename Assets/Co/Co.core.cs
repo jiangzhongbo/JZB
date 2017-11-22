@@ -8,18 +8,17 @@ public sealed partial class Co : MonoBehaviour
     private static Action noop = () => { };
     private PoolType poolType = PoolType.Concurrent;
     private ICoroutinePool pool = new ConcurrentPool();
-    private Dictionary<_Coroutine, _Coroutine> child_parent = new Dictionary<_Coroutine, _Coroutine>();
-    private List<Action<ICoroutinePool, _Coroutine, object>> _filters = new List<Action<ICoroutinePool, _Coroutine, object>>();
-    private Dictionary<Coroutine, _Coroutine> outer_inter = new Dictionary<Coroutine, _Coroutine>();
-    private Dictionary<_Coroutine, Coroutine> inter_outer = new Dictionary<_Coroutine, Coroutine>();
-    private _Coroutine co_current = null;
+    private Dictionary<Coroutine, Coroutine> child_parent = new Dictionary<Coroutine, Coroutine>();
+    private Dictionary<Coroutine, CoroutineInterHandler> co_internal = new Dictionary<Coroutine, CoroutineInterHandler>();
+    private List<Action<ICoroutinePool, Coroutine, object>> _filters = new List<Action<ICoroutinePool, Coroutine, object>>();
+    private Coroutine co_current = null;
 
     void Awake()
     {
         filters();
     }
 
-    private void filter(Action<ICoroutinePool, _Coroutine, object> fn)
+    private void filter(Action<ICoroutinePool, Coroutine, object> fn)
     {
         _filters.Add(fn);
     }
@@ -39,24 +38,10 @@ public sealed partial class Co : MonoBehaviour
             {
                 if (c is IEnumerator)
                 {
-                    co.State = CoroutineState.Normal;
+                    co_internal[co].SetCoroutineState(CoroutineState.Normal);
                     pool.Remove(co);
                     var _co = create(c as IEnumerator);
-                    _co.State = CoroutineState.Suspend;
-                    pool.Add(_co);
-                    child_parent[_co] = co;
-                }
-            }
-        );
-        filter(
-            (pool, co, c) =>
-            {
-                if (c is _Coroutine)
-                {
-                    co.State = CoroutineState.Normal;
-                    pool.Remove(co);
-                    var _co = c as _Coroutine;
-                    _co.State = CoroutineState.Suspend;
+                    co_internal[co].SetCoroutineState(CoroutineState.Suspend);
                     pool.Add(_co);
                     child_parent[_co] = co;
                 }
@@ -67,10 +52,10 @@ public sealed partial class Co : MonoBehaviour
             {
                 if (c is Coroutine)
                 {
-                    co.State = CoroutineState.Normal;
+                    co_internal[co].SetCoroutineState(CoroutineState.Normal);
                     pool.Remove(co);
-                    var _co = outer_inter[(Coroutine)c];
-                    _co.State = CoroutineState.Suspend;
+                    var _co = c as Coroutine;
+                    co_internal[co].SetCoroutineState(CoroutineState.Suspend);
                     pool.Add(_co);
                     child_parent[_co] = co;
                 }
@@ -78,10 +63,13 @@ public sealed partial class Co : MonoBehaviour
         );
     }
 
-    private _Coroutine create(IEnumerator ie, RunType type = RunType.Update)
+    private Coroutine create(IEnumerator ie, RunType type = RunType.Update)
     {
-        var _co = new _Coroutine(ie, type);
-        return _co; 
+        var hander = new CoroutineInterHandler();
+        hander.IE = ie;
+        var co = new Coroutine(ie, type, out hander.SetRunType, out hander.SetCoroutineState, out hander.GetOnFinishs);
+        co_internal[co] = hander;
+        return co; 
     }
 
     private void Update()
@@ -112,16 +100,17 @@ public sealed partial class Co : MonoBehaviour
         }
     }
 
-    private void handle_coroutine(_Coroutine c)
+    private void handle_coroutine(Coroutine c)
     {
         co_current = c;
-        c.State = CoroutineState.Running;
-        bool ok = c.IE.MoveNext();
-        c.State = CoroutineState.Suspend;
+        co_internal[c].SetCoroutineState(CoroutineState.Running);
+        bool ok = co_internal[c].IE.MoveNext();
+        co_internal[c].SetCoroutineState(CoroutineState.Suspend);
         co_current = null;
         if (ok)
         {
-            var current = c.IE.Current;
+            var current = co_internal[c].IE.Current;
+            co_internal[c].Current = current;
             for (int i = 0; i < _filters.Count; i++)
             {
                 _filters[i](pool, c, current);
@@ -135,15 +124,14 @@ public sealed partial class Co : MonoBehaviour
                 pool.Add(p);
                 child_parent.Remove(c);
             }
-            c.State = CoroutineState.Dead;
+            co_internal[c].SetCoroutineState(CoroutineState.Dead);
             pool.Remove(c);
-            if (inter_outer.ContainsKey(c))
+            var thens = co_internal[c].GetOnFinishs();
+            for(int i = 0; i < thens.Count; i++)
             {
-                var out_c = inter_outer[c];
-                out_c.CallThen();
-                inter_outer.Remove(c);
-                outer_inter.Remove(out_c);
+                thens[i]?.Invoke(co_internal[c].Current);
             }
+            co_internal.Remove(c);
         }
     }
 }

@@ -4,14 +4,7 @@ using System;
 
 namespace UPromise
 {
-    public interface IDeferred
-    {
-        void Done(object value);
-        void Fail(object reason);
-        Promise Promise();
-    }
-
-    public class Deferred : IDeferred
+    public class Deferred
     {
         private Promise.cb resolve;
         private Promise.cb reject;

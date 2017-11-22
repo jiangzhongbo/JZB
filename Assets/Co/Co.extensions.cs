@@ -25,7 +25,7 @@ public partial class Co
             {
                 if (c is object && c == ToUpdate)
                 {
-                    co.Type = RunType.Update;
+                    co_internal[co].SetRunType(RunType.Update);
                 }
             }
         );
@@ -34,7 +34,7 @@ public partial class Co
             {
                 if (c is object && c == ToFixedUpdate)
                 {
-                    co.Type = RunType.FixedUpdate;
+                    co_internal[co].SetRunType(RunType.FixedUpdate);
                 }
             }
         );
@@ -43,7 +43,7 @@ public partial class Co
             {
                 if (c is object && c == ToLateUpdate)
                 {
-                    co.Type = RunType.LateUpdate;
+                    co_internal[co].SetRunType(RunType.LateUpdate);
                 }
             }
         );

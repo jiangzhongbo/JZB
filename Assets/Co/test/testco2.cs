@@ -6,8 +6,19 @@ public class testco2 : MonoBehaviour
     void Start()
     {
         var co = gameObject.AddComponent<Co>();
-        co.Run(test1())
-            .Then(c => { });
+
+        new UPromise.Promise((a, b) =>
+        {
+            co.Run(test1()).Then(value =>
+            {
+                a(value);
+            });
+        });
+
+        co.Run(test1()).ToPromise().Then(value =>
+        {
+            Debug.Log(value);
+        });
     }
 
 

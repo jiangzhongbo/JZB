@@ -2,17 +2,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public sealed class Channel
+using UPromise;
+
+public sealed class Channel : Co.IPromiser
 {
     public readonly int Handle;
-    public Channel(int handle)
+    private readonly Func<int, Tuple<Action<object[]>, object[]>> getMsg;
+    private Promise.cb done;
+    public Channel(int handle, Func<int, Tuple<Action<object[]>, object[]>> fn, out Action dispatch)
     {
         Handle = handle;
+        getMsg = fn;
+        dispatch = Dispatch;
     }
 
-    public void Dispatch()
+    private void Dispatch()
     {
+        
+    }
 
+    public Promise GetPromise()
+    {
+        return new Promise((a, b) =>
+        {
+            done = a;
+        });
     }
 
     public Action<object> Read()

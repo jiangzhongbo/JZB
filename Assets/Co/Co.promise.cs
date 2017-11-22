@@ -4,6 +4,10 @@ using System;
 using UPromise;
 public partial class Co
 {
+    public interface IPromiser
+    {
+        Promise GetPromise();
+    }
 
     private void filterPromise()
     {
@@ -13,7 +17,7 @@ public partial class Co
                 if (c is Promise)
                 {
                     pool.Remove(co);
-                    Action<_Coroutine> f = (arg) =>
+                    Action<Coroutine> f = (arg) =>
                     {
                         var p = (Promise)c;
                         p.Then(
@@ -29,13 +33,13 @@ public partial class Co
                     };
                     f(co);
                 }
-                if(c is IDeferred)
+                if(c is IPromiser)
                 {
                     pool.Remove(co);
-                    Action<_Coroutine> f = (arg) =>
+                    Action<Coroutine> f = (arg) =>
                     {
-                        var p = (IDeferred)c;
-                        p.Promise().Then(
+                        var p = (IPromiser)c;
+                        p.GetPromise().Then(
                             value =>
                             {
                                 pool.Add(arg);
@@ -51,41 +55,18 @@ public partial class Co
             }
         );
     }
+
     public partial class Coroutine
     {
-        public Promise Then(Action<Coroutine> cb)
+        public Promise ToPromise()
         {
             return new Promise((a, b) =>
             {
-                SetThen(() =>
+                Then(value =>
                 {
-                    cb(this);
-                    a(this);
-                });
-            });
-        }
-
-        public Promise Then(Func<Coroutine,object> cb)
-        {
-            return new Promise((a, b) =>
-            {
-                SetThen(() =>
-                {
-                    a(cb(this));
-                });
-            });
-        }
-
-        public Promise Then()
-        {
-            return new Promise((a, b) =>
-            {
-                SetThen(() =>
-                {
-                    a(this);
+                    a(value);
                 });
             });
         }
     }
-
 }
