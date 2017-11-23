@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UActor;
+using Actor;
 using System;
 public class TestActor
 {

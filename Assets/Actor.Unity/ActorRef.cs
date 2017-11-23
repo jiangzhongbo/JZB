@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UPromise;
-namespace UActor
+namespace Actor
 {
     public class ActorRef
     {

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-namespace UActor
+namespace Actor
 {
     public sealed class Skynet : MonoBehaviour
     {
