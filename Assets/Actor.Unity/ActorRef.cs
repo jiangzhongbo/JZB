@@ -12,16 +12,16 @@ namespace Actor
             Handle = handle;
         }
 
-        public void Tell(object value)
+        public void Tell(params object[] args)
         {
             Skynet.Send(
                 Handle, 
                 null,
-                value
+                args
             );
         }
 
-        public Promise Ask(object value)
+        public Promise Ask(params object[] args)
         {
             return new Promise((ok, errer) =>
             {
@@ -31,7 +31,7 @@ namespace Actor
                     {
                         ok(values);
                     },
-                    value
+                    args
                 );
             });
         }

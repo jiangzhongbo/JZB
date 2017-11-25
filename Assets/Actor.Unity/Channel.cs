@@ -3,35 +3,61 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UPromise;
-
-public sealed class Channel : Co.IPromiser
+namespace Actor
 {
-    public readonly int Handle;
-    private readonly Func<int, Tuple<Action<object[]>, object[]>> getMsg;
-    private Promise.cb done;
-    public Channel(int handle, Func<int, Tuple<Action<object[]>, object[]>> fn, out Action dispatch)
+    public sealed class Channel : Co.IPromiser
     {
-        Handle = handle;
-        getMsg = fn;
-        dispatch = Dispatch;
-    }
-
-    private void Dispatch()
-    {
-        
-    }
-
-    public Promise GetPromise()
-    {
-        return new Promise((a, b) =>
+        public class Mail
         {
-            done = a;
-        });
+            private Skynet.SkynetMessage msg;
+            public Mail(Skynet.SkynetMessage msg)
+            {
+                this.msg = msg;
+            }
+
+            public object[] Args
+            {
+                get
+                {
+                    return msg.Args;
+                }
+            }
+            public void Reply(params object[] values)
+            {
+                msg.CB(values);
+            }
+        }
+        public readonly int Handle;
+        private readonly Action<int, Promise.cb> tigger;
+        private Queue<Skynet.SkynetMessage> queue = new Queue<Skynet.SkynetMessage>(1);
+        public Channel(int handle, Action<int, Promise.cb> fn)
+        {
+            Handle = handle;
+            tigger = fn;
+        }
+
+        public Promise GetPromise()
+        {
+            return new Promise((a, b) =>
+            {
+                tigger(Handle, a);
+            })
+            .Then(value =>
+            {
+                queue.Enqueue((Skynet.SkynetMessage)value);
+            });
+        }
+
+        public Mail Read()
+        {
+            if(queue.Count > 0)
+            {
+                return new Mail(queue.Dequeue());
+            }
+            throw new Exception("no msg");
+        }
+     
+    
     }
 
-    public Action<object> Read()
-    {
-        return value => { };
-    }
-         
 }
