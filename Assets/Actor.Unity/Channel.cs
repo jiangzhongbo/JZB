@@ -28,9 +28,9 @@ namespace Actor
             }
         }
         public readonly int Handle;
-        private readonly Action<int, Promise.cb> tigger;
+        private readonly Action<int, Promise.CB> tigger;
         private Queue<Skynet.SkynetMessage> queue = new Queue<Skynet.SkynetMessage>(1);
-        public Channel(int handle, Action<int, Promise.cb> fn)
+        public Channel(int handle, Action<int, Promise.CB> fn)
         {
             Handle = handle;
             tigger = fn;

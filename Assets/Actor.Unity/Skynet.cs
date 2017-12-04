@@ -15,7 +15,7 @@ namespace Actor
         }
 
         private static Dictionary<int, Queue<SkynetMessage>> Q = new Dictionary<int, Queue<SkynetMessage>>();
-        private static Dictionary<int, Queue<Promise.cb>> handle_cb = new Dictionary<int, Queue<Promise.cb>>();
+        private static Dictionary<int, Queue<Promise.CB>> handle_cb = new Dictionary<int, Queue<Promise.CB>>();
         public static void Send(int addr, Action<object[]> cb, params object[] args)
         {
             Q[addr].Enqueue(new SkynetMessage() { CB = cb, Args = args });
@@ -26,7 +26,7 @@ namespace Actor
             ++handle_index;
             var actorRef = new ActorRef(handle_index);
             var chan = new Channel(handle_index, tigger);
-            handle_cb[handle_index] = new Queue<Promise.cb>();
+            handle_cb[handle_index] = new Queue<Promise.CB>();
             Q[handle_index] = new Queue<SkynetMessage>();
             co.Run(fn(chan));
             return actorRef;
@@ -37,7 +37,7 @@ namespace Actor
             co = gameObject.AddComponent<Co>();
         }
 
-        private static void tigger(int handle, Promise.cb fn)
+        private static void tigger(int handle, Promise.CB fn)
         {
             if (Q[handle].Count > 0)
             {

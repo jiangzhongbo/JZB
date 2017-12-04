@@ -35,7 +35,7 @@ namespace Skynet1
 
         // out
         private Queue<cotask> localqueue = new Queue<cotask>();
-        private Dictionary<int, Promise.cb> localsession_promisecb = new Dictionary<int, Promise.cb>();
+        private Dictionary<int, Promise.CB> localsession_promisecb = new Dictionary<int, Promise.CB>();
         private List<cotask> ie_ret = new List<cotask>();
 
         private cotask current_cotask = null;

@@ -6,19 +6,19 @@ namespace UPromise
 {
     public partial class Promise
     {
-        public delegate void cb(object value);
-        public delegate object cb_with_result(object value);
+        public delegate void CB(object value);
+        public delegate object CB_With_Result(object value);
 
-        public delegate void exec(cb a, cb b);
+        public delegate void exec(CB a, CB b);
 
         private class Handler
         {
             public bool no_result = false;
-            public cb_with_result onFulfilled;
-            public cb_with_result onRejected;
+            public CB_With_Result onFulfilled;
+            public CB_With_Result onRejected;
             public Promise promise;
 
-            public Handler(cb_with_result onFulfilled, cb_with_result onRejected, Promise promise, bool no_result)
+            public Handler(CB_With_Result onFulfilled, CB_With_Result onRejected, Promise promise, bool no_result)
             {
                 this.onFulfilled = onFulfilled;
                 this.onRejected = onRejected;
@@ -59,14 +59,14 @@ namespace UPromise
             doResolve(fn);
         }
 
-        public Promise Then(cb_with_result onFulfilled = null, cb_with_result onRejected = null)
+        public Promise Then(CB_With_Result onFulfilled = null, CB_With_Result onRejected = null)
         {
             var res = new Promise(noop);
             handle(new Handler(onFulfilled, onRejected, res, false));
             return res;
         }
 
-        public Promise Then(cb onFulfilled = null, cb onRejected = null)
+        public Promise Then(CB onFulfilled = null, CB onRejected = null)
         {
             var res = new Promise(noop);
             handle(new Handler(
@@ -116,32 +116,37 @@ namespace UPromise
 
         private void handleResolved(Handler deferred)
         {
-            var cb = this._state == State._1_fulfilled ? deferred.onFulfilled : deferred.onRejected;
-            if (cb == null)
+            UnityScheduler.Timeout(() =>
             {
-                if (this._state == State._1_fulfilled)
+                var cb = this._state == State._1_fulfilled ? deferred.onFulfilled : deferred.onRejected;
+                if (cb == null)
+                {
+                    if (this._state == State._1_fulfilled)
+                    {
+                        deferred.promise.resolve(this._value);
+                    }
+                    else
+                    {
+                        deferred.promise.reject(this._value);
+                    }
+                    return;
+                }
+                var ret = tryCallOne(cb, this._value);
+                if (ret == IS_ERROR)
+                {
+                    deferred.promise.reject(LAST_ERROR);
+                }
+                else if (deferred.no_result)
                 {
                     deferred.promise.resolve(this._value);
                 }
                 else
                 {
-                    deferred.promise.reject(this._value);
+                    deferred.promise.resolve(ret);
                 }
-                return;
-            }
-            var ret = tryCallOne(cb, this._value);
-            if (ret == IS_ERROR)
-            {
-                deferred.promise.reject(LAST_ERROR);
-            }
-            else if (deferred.no_result)
-            {
-                deferred.promise.resolve(this._value);
-            }
-            else
-            {
-                deferred.promise.resolve(ret);
-            }
+            },
+            0);
+            
         }
 
         private void resolve(object newValue)
@@ -209,7 +214,7 @@ namespace UPromise
             }
         }
 
-        private object tryCallOne(cb_with_result fn, object a)
+        private object tryCallOne(CB_With_Result fn, object a)
         {
             try
             {
@@ -222,7 +227,7 @@ namespace UPromise
             }
         }
 
-        private object tryCallTwo(exec fn, cb a, cb b)
+        private object tryCallTwo(exec fn, CB a, CB b)
         {
             try
             {

@@ -6,7 +6,19 @@ using UPromise;
 using System;
 public class PromiseTest {
 
-	[Test]
+    [Test]
+    public void Test_must_be_called_immediately_before_promise_return()
+    {
+        var called = false;
+        new Promise((a, b) =>
+        {
+            called = true;
+
+        });
+        Assert.IsTrue(called);
+    }
+
+    [Test]
     public void Test_then_immediately()
     {
         new Promise((a, b) =>
@@ -21,7 +33,7 @@ public class PromiseTest {
 	[UnityTest]
     public IEnumerator Test_then_later()
     {
-        Promise.cb cb = null;
+        Promise.CB cb = null;
         new Promise((a, b) =>
         {
             cb = a;

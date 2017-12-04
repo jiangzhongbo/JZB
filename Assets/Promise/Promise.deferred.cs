@@ -6,8 +6,8 @@ namespace UPromise
 {
     public class Deferred
     {
-        private Promise.cb resolve;
-        private Promise.cb reject;
+        private Promise.CB resolve;
+        private Promise.CB reject;
         private Promise promise;
         public Deferred()
         {

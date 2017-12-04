@@ -13,12 +13,12 @@ namespace UPromise
         private static Promise EMPTYSTRING = valuePromise("");
 
 
-        public Promise Catch(cb_with_result onRejected)
+        public Promise Catch(CB_With_Result onRejected)
         {
             return Then(null, onRejected);
         }
 
-        public Promise Catch(cb onRejected)
+        public Promise Catch(CB onRejected)
         {
             return Then(null, onRejected);
         }
